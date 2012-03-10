@@ -17,7 +17,9 @@ var EventHandler = new Class({
     };
   },
 
+
   // Events
+
 
   keyDowned: function( event ){
     var data;
@@ -27,6 +29,7 @@ var EventHandler = new Class({
         event.preventDefault();
 
         data = {
+          id: this.id,
           action: 'resize',
           params: {
             direction: event.key,
@@ -43,6 +46,7 @@ var EventHandler = new Class({
         event.preventDefault();
 
         data = {
+          id: this.id,
           action: 'move',
           params: {
             direction: event.key,
@@ -57,6 +61,14 @@ var EventHandler = new Class({
 
   
   gotMessage: function( event ){
-    this.fireEvent( 'change', [ JSON.decode( event.data ) ] );
+    var data = JSON.decode( event.data );
+
+    if ( data.id ){
+      this.id = data.id;
+    }
+
+    else {
+      this.fireEvent( 'change', [ data ] );
+    }
   }
 });

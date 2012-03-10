@@ -1,10 +1,12 @@
+var crypto = require( 'crypto' );
+
 exports.Server = new Class({ 
   Implements: Events,
 
   initialize: function( config ){
     this.http              = require( 'http' );
     this.WebsocketServer   = require( 'websocket' ).server;
-    this.connections       = [];
+    this.connections       = {};
     this.config            = config;
 
     this.createHttpServer();
@@ -41,7 +43,7 @@ exports.Server = new Class({
 
 
   sendJson: function( message ){
-    this.connections.each( function( connection ){
+    Object.each( this.connections, function( connection ){
       connection.sendUTF( JSON.stringify( message ) );
     });
   },
@@ -51,7 +53,7 @@ exports.Server = new Class({
 
 
   requested: function( request ){
-    var connection;
+    var connection, id;
 
     if ( ! this.originIsAllowed( request.origin ) ){
       request.reject();
@@ -59,17 +61,21 @@ exports.Server = new Class({
     }
 
     else {
+      id = crypto.createHash( 'sha1' ).update( String.uniqueID() ).digest( 'hex' );
       connection = request.accept( 'square-play', request.origin );
-      this.connections.push( connection );
+      this.connections[ id ] = connection;
+      connection.sendUTF( JSON.stringify({ id: id }) );
       console.log(( new Date() ) + ' Connection accepted.' );
+    
+      this.handleMessage( connection, id );
+      this.handleClose( connection, id );
+      
+      this.fireEvent( 'join', id );
     }
-
-    this.handleMessage( connection );
-
   },
 
 
-  handleMessage: function( connection ){
+  handleMessage: function( connection, id ){
     connection.on( 'message', function( message ){
       if ( message.type === 'utf8' ){
         this.fireEvent( 'message', [ JSON.parse( message.utf8Data ) ] );
@@ -78,13 +84,11 @@ exports.Server = new Class({
   },
 
 
-  handleClose: function( connection ){
+  handleClose: function( connection, id ){
     connection.on( 'close', function( reasonCode, description ){
-      var i;
-
       console.log(( new Date() ) + ' Peer ' + connection.remoteAddress + ' disconnected.' );
-      i = this.connections.indexOf( connection );
-      delete this.connections[ i ];
+      delete this.connections[ id ];
+      this.fireEvent( 'quit', id );
     }.bind( this ));
   }
 });

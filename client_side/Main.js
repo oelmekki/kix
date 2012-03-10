@@ -4,7 +4,7 @@ var Main = new Class({
     this.drawer = new Drawer();
     this.events = new EventHandler();
 
-    this.events.addEvent( 'change', this.drawer.change.bind( this.drawer ) );
+    this.events.addEvent( 'change', this.drawer.update.bind( this.drawer ) );
   }
 });
 

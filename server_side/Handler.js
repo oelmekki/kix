@@ -1,42 +1,60 @@
 exports.Handler = new Class({ 
-  Implements: Events,
+  Implements: [ Options, Events ],
 
   options: {
     x: 30,
     y: 30,
-    width: 50,
-    height: 55,
-    step: 1
+    initial: {
+      width: 50,
+      height: 55,
+      step: 1
+    }
   },
 
 
-  initialize: function(){
-    this.data = {
-      x:      this.options.x,
-      y:      this.options.y,
-      width:  this.options.width,
-      height: this.options.height
-    };
+  initialize: function( config ){
+    this.setOptions();
+    this.players  = {};
+    this.config   = config;
   },
 
 
   gotMessage: function( message ){
     switch( message.action ){
       case 'move':
-        this.move( message.params );
+        this.move( message.id, message.params );
         break;
 
       case 'resize':
-        this.resize( message.params );
+        this.resize( message.id, message.params );
         break;
-
-      case 'init':
-        this.fireEvent( 'change', [ this.data ] );
     }
   },
 
 
-  move: function( options ){
+  addPlayer: function( id ){
+    var player          = Object.clone( this.options.initial );
+    player.x            = Number.random( 0, this.config.area_width - player.width );
+    player.y            = Number.random( 0, this.config.area_height - player.height );
+    player.color        = 'rgba( ' + Number.random( 10, 255 )  + ', ' + Number.random( 10, 255 ) + ', ' + Number.random( 10, 255 ) + ', 0.8 )';
+    this.players[ id ]  = player;
+
+    this.change();
+  },
+
+
+  removePlayer: function( id ){
+    delete this.players[ id ];
+    this.change();
+  },
+
+
+  change: function(){
+    this.fireEvent( 'change', [ Object.values( this.players ) ] );
+  },
+
+
+  move: function( id, options ){
     var change = true;
 
     if ( ! options.step ){
@@ -45,19 +63,19 @@ exports.Handler = new Class({
 
     switch ( options.direction ){
       case 'up':
-        this.data.y -= options.step;
+        this.players[ id ].y -= options.step;
         break;
 
       case 'right':
-        this.data.x += options.step;
+        this.players[ id ].x += options.step;
         break;
 
       case 'down':
-        this.data.y += options.step;
+        this.players[ id ].y += options.step;
         break;
 
       case 'left':
-        this.data.x -= options.step;
+        this.players[ id ].x -= options.step;
         break;
 
       default:
@@ -65,12 +83,12 @@ exports.Handler = new Class({
     }
 
     if ( change ){
-      this.fireEvent( 'change', [ this.data ] );
+      this.change();
     }
   },
 
 
-  resize: function( options ){
+  resize: function( id, options ){
     var change = true;
 
     if ( ! options.step ){
@@ -79,19 +97,19 @@ exports.Handler = new Class({
 
     switch ( options.direction ){
       case 'up':
-        this.data.height -= options.step;
+        this.players[ id ].height -= options.step;
         break;
 
       case 'right':
-        this.data.width += options.step;
+        this.players[ id ].width += options.step;
         break;
 
       case 'down':
-        this.data.height += options.step;
+        this.players[ id ].height += options.step;
         break;
 
       case 'left':
-        this.data.width -= options.step;
+        this.players[ id ].width -= options.step;
         break;
 
       default:
@@ -99,7 +117,7 @@ exports.Handler = new Class({
     }
 
     if ( change ){
-      this.fireEvent( 'change', [ this.data ] );
+      this.change();
     }
   }
 });
