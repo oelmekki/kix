@@ -22,6 +22,15 @@ var Drawer = new Class({
       this.drawPlayer( player );
     }.bind( this ));
   },
+  
+
+  positionateCanvas: function(){
+    var viewport_size = window.getSize();
+    this.$canvas.setStyles({ 
+      'left': ( viewport_size.x - configuration.area_width ) / 2,
+      'top': ( viewport_size.y - configuration.area_height ) / 2
+    });
+  },
 
 
   // Protected
@@ -44,15 +53,6 @@ var Drawer = new Class({
   },
   
 
-  positionateCanvas: function(){
-    var viewport_size = window.getSize();
-    this.$canvas.setStyles({ 
-      'left': ( viewport_size.x - configuration.area_width ) / 2,
-      'top': ( viewport_size.y - configuration.area_height ) / 2
-    });
-  },
-  
-
   draw: function( drawing_function, params ){
     this.ctx.save();
     drawing_function.call( this, params );
@@ -72,8 +72,13 @@ var Drawer = new Class({
 
   drawBorder: function(){
     this.draw( function(){
+      var decay_x, decay_y;
+
+      decay_x = configuration.initial.width / 2;
+      decay_y = configuration.initial.height / 2;
       this.ctx.strokeStyle = '#888';
-      this.ctx.strokeRect( 0, 0, configuration.area_width, configuration.area_height );
+      this.ctx.lineWidth = 1;
+      this.ctx.strokeRect( decay_x, decay_y, configuration.area_width - ( decay_x * 2 ), configuration.area_height - ( decay_y * 2 ) );
     });
   }.protect()
 });
