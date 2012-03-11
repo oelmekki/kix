@@ -106,8 +106,13 @@ exports.Handler = new Class({
       }
 
       if ( change && this.noCollision( id, new_position ) ){
-        player.x = new_position.x;
-        player.y = new_position.y;
+        this.fixPosition( new_position );
+
+        if ( this.legalMove( new_position ) ){
+          player.x = new_position.x;
+          player.y = new_position.y;
+        }
+
       }
     }.bind( this ));
 
@@ -135,6 +140,46 @@ exports.Handler = new Class({
     }.bind( this ));
 
     return ! collide;
+  }.protect(),
+
+
+  legalMove: function( new_position ){
+    if ( new_position.y == 0 && new_position.x >= 0 && new_position.x <= this.config.area_width ){
+      return true;
+    }
+
+    if ( new_position.y == this.config.area_height && new_position.x >= 0 && new_position.x <= this.config.area_width ){
+      return true;
+    }
+
+    if ( new_position.x == 0 && new_position.y >= 0 && new_position.y <= this.config.area_height ){
+      return true;
+    }
+
+    if ( new_position.x == this.config.area_width && new_position.y >= 0 && new_position.y <= this.config.area_height ){
+      return true;
+    }
+
+    return false;
+  }.protect(),
+
+
+  fixPosition: function( new_position ){
+    if ( new_position.x < 0 ){
+      new_position.x = 0;
+    }
+
+    if ( new_position.x > this.config.area_width ){
+      new_position.x = this.config.area_width;
+    }
+
+    if ( new_position.y < 0 ){
+      new_position.y = 0;
+    }
+
+    if ( new_position.y > this.config.area_height ){
+      new_position.y = this.config.area_height;
+    }
   }.protect(),
 
 
