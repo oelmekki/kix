@@ -5,10 +5,10 @@ exports.Handler = new Class({
   initialize: function( config ){
     this.players  = {};
     this.config   = config;
-    this.step     = 2;
-    this.run_step = 5;
+    this.step     = config.step;
+    this.run_step = config.run_step;
 
-    setInterval( this.move.bind( this ), 25 );
+    setInterval( this.move.bind( this ), config.base_beat );
   },
 
 

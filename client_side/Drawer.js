@@ -6,6 +6,7 @@ var Drawer = new Class({
     this.animation_factor = 1;
     this.players          = [];
     this.running          = true;
+    this.synced           = false;
 
     this.$canvas.set( 'width', configuration.area_width + ( configuration.initial.width * 2 ) );
     this.$canvas.set( 'height', configuration.area_height + ( configuration.initial.height * 2 ) );
@@ -13,17 +14,24 @@ var Drawer = new Class({
     this.positionateCanvas();
 
     window.setInterval( this.animate.bind( this ), 125 );
+    window.setInterval( this.update.bind( this ), configuration.base_beat );
   },
 
 
-  update: function( players ){
+  updateData: function( players ){
+    this.players = players;
+    this.synced  = true;
+  },
+
+
+  update: function(){
     if ( this.running ){
-      this.players = players;
       this.clear();
       this.drawBorder();
-      Object.each( players, function( player ){
+      Object.each( this.players, function( player ){
         this.drawPlayer( player );
       }.bind( this ));
+      this.synced = false;
     }
   },
   
@@ -71,8 +79,6 @@ var Drawer = new Class({
         this.current_radius   = 3;
         this.animation_factor = 1;
       }
-
-      this.update( this.players );
     }
   },
   
@@ -85,6 +91,10 @@ var Drawer = new Class({
 
 
   drawPlayer: function( player ){
+    if ( ! this.synced ){
+      this.anticipate( player );
+    }
+
     this.draw( function( player ){
       this.ctx.fillStyle = player.color;
       this.ctx.beginPath();
@@ -92,6 +102,37 @@ var Drawer = new Class({
       this.ctx.fill();
     }, player );
   }.protect(),
+
+
+  anticipate: function( player ){
+    var step = configuration[ player.run ? 'run_step' : 'step' ];
+
+    switch( player.direction ){
+      case 'top':
+        if ( player.y - step <= 0 ){
+          player.y -= step;
+        }
+        break;
+
+      case 'right':
+        if ( player.x + step <= configuration.area_width ){
+          player.x += step;
+        }
+        break;
+
+      case 'bottom':
+        if ( player.y + step <= configuration.area_height ){
+          player.y += step;
+        }
+        break;
+
+      case 'left':
+        if ( player.x - step >= 0 ){
+          player.x -= step;
+        }
+        break;
+    }
+  },
 
 
   drawBorder: function(){
