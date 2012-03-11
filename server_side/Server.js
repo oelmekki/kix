@@ -42,6 +42,12 @@ exports.Server = new Class({
   },
 
 
+  reject: function( id ){
+    this.connections[ id ].end( 'no more room' );
+    delete this.connections[ id ];
+  },
+
+
   sendJson: function( message ){
     Object.each( this.connections, function( connection ){
       connection.sendUTF( JSON.stringify( message ) );

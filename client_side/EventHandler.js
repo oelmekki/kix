@@ -24,38 +24,19 @@ var EventHandler = new Class({
   keyDowned: function( event ){
     var data;
 
-    if ( event.control ){
-      if ( [ 'up', 'right', 'down', 'left' ].indexOf( event.key ) !== -1 ){
-        event.preventDefault();
+    if ( [ 'up', 'right', 'down', 'left' ].indexOf( event.key ) !== -1 ){
+      event.preventDefault();
 
-        data = {
-          id: this.id,
-          action: 'resize',
-          params: {
-            direction: event.key,
-            step: event.shift ? 5 : 1
-          }
-        };
+      data = {
+        id: this.id,
+        action: 'move',
+        params: {
+          direction: event.key,
+          step: event.shift ? 5 : 1
+        }
+      };
 
-        this.sock.send( JSON.encode( data ) );
-      }
-    }
-    
-    else {
-      if ( [ 'up', 'right', 'down', 'left' ].indexOf( event.key ) !== -1 ){
-        event.preventDefault();
-
-        data = {
-          id: this.id,
-          action: 'move',
-          params: {
-            direction: event.key,
-            step: event.shift ? 5 : 1
-          }
-        };
-
-        this.sock.send( JSON.encode( data ) );
-      }
+      this.sock.send( JSON.encode( data ) );
     }
   },
 
