@@ -28,7 +28,8 @@ var EventHandler = new Class({
         action: 'change_direction',
         params: {
           direction: event.key,
-          run:       event.shift
+          run:       event.shift,
+          draw:      event.control
         }
       };
 

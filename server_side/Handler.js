@@ -44,6 +44,7 @@ exports.Handler = new Class({
 
       if ( this.noCollision( id, player ) ){
         player.color        = 'rgb( ' + Number.random( 10, 255 )  + ', ' + Number.random( 10, 255 ) + ', ' + Number.random( 10, 255 ) + ' )';
+        player.drawn        = [ { x: player.x, y: player.y } ];
         this.players[ id ]  = player;
 
         this.change();
@@ -67,6 +68,13 @@ exports.Handler = new Class({
     if ( this.players[ id ] && [ 'up', 'right', 'down', 'left' ].indexOf( options.direction ) != -1 ){
       this.players[ id ].direction = options.direction;
       this.players[ id ].run       = !! options.run;
+      
+      if ( options.draw ){
+        if ( ! this.players[ id ].draw && this.isOnSafeZone( this.players[ id ] ) ){
+          this.players[ id ].drawn = [];
+          this.players[ id ].drawing = true;
+        }
+      }
     }
   },
 
@@ -108,7 +116,13 @@ exports.Handler = new Class({
       if ( change && this.noCollision( id, new_position ) ){
         this.fixPosition( new_position );
 
-        if ( this.legalMove( new_position ) ){
+        if ( this.isOnSafeZone( new_position ) ){
+          player.x = new_position.x;
+          player.y = new_position.y;
+        }
+
+        else if ( player.drawing ){
+          player.drawn.push({ x: new_position.x, y: new_position.y });
           player.x = new_position.x;
           player.y = new_position.y;
         }
@@ -143,20 +157,20 @@ exports.Handler = new Class({
   }.protect(),
 
 
-  legalMove: function( new_position ){
-    if ( new_position.y == 0 && new_position.x >= 0 && new_position.x <= this.config.area_width ){
+  isOnSafeZone: function( position ){
+    if ( position.y == 0 && position.x >= 0 && position.x <= this.config.area_width ){
       return true;
     }
 
-    if ( new_position.y == this.config.area_height && new_position.x >= 0 && new_position.x <= this.config.area_width ){
+    if ( position.y == this.config.area_height && position.x >= 0 && position.x <= this.config.area_width ){
       return true;
     }
 
-    if ( new_position.x == 0 && new_position.y >= 0 && new_position.y <= this.config.area_height ){
+    if ( position.x == 0 && position.y >= 0 && position.y <= this.config.area_height ){
       return true;
     }
 
-    if ( new_position.x == this.config.area_width && new_position.y >= 0 && new_position.y <= this.config.area_height ){
+    if ( position.x == this.config.area_width && position.y >= 0 && position.y <= this.config.area_height ){
       return true;
     }
 

@@ -91,12 +91,30 @@ var Drawer = new Class({
 
 
   drawPlayer: function( player ){
+    var start, path;
+
     if ( ! this.synced ){
       this.anticipate( player );
     }
 
     this.draw( function( player ){
       this.ctx.fillStyle = player.color;
+
+      if ( player.drawn.length ){
+        path                  = Array.clone( player.drawn );
+        start                 = path.shift();
+        this.ctx.strokeStyle  = player.color;
+
+        this.ctx.beginPath();
+        this.ctx.moveTo( start.x, start.y );
+
+        player.drawn.each( function( coord ){
+          this.ctx.lineTo( coord.x, coord.y );
+        }.bind( this ));
+
+        this.ctx.stroke();
+      }
+
       this.ctx.beginPath();
       this.ctx.arc( player.x, player.y, this.current_radius, 0, Math.PI * 2, true );
       this.ctx.fill();
