@@ -5,13 +5,17 @@ exports.Handler = new Class({
   initialize: function( config ){
     this.players  = {};
     this.config   = config;
+    this.step     = 2;
+    this.run_step = 5;
+
+    setInterval( this.move.bind( this ), 25 );
   },
 
 
   gotMessage: function( message ){
     switch( message.action ){
-      case 'move':
-        this.move( message.id, message.params );
+      case 'change_direction':
+        this.changeDirection( message.id, message.params );
         break;
     }
   },
@@ -59,46 +63,55 @@ exports.Handler = new Class({
   },
 
 
-  move: function( id, options ){
-    var new_position, change = true;
-
-    if ( ! options.step ){
-      options.step = this.config.initial.step;
+  changeDirection: function( id, options ){
+    if ( this.players[ id ] && [ 'up', 'right', 'down', 'left' ].indexOf( options.direction ) != -1 ){
+      this.players[ id ].direction = options.direction;
+      this.players[ id ].run       = !! options.run;
     }
+  },
 
-    new_position = {
-      x: this.players[ id ].x,
-      y: this.players[ id ].y,
-      width: this.players[ id ].width,
-      height: this.players[ id ].height
-    };
 
-    switch ( options.direction ){
-      case 'up':
-        new_position.y -= options.step;
-        break;
+  move: function(){
+    Object.each( this.players, function( player, id ){
+      var new_position, step, change = true;
 
-      case 'right':
-        new_position.x += options.step;
-        break;
+      step = player.run ? this.run_step : this.step;
 
-      case 'down':
-        new_position.y += options.step;
-        break;
+      new_position = {
+        x: player.x,
+        y: player.y,
+        width: player.width,
+        height: player.height
+      };
 
-      case 'left':
-        new_position.x -= options.step;
-        break;
+      switch ( player.direction ){
+        case 'up':
+          new_position.y -= step;
+          break;
 
-      default:
-        change = false;
-    }
+        case 'right':
+          new_position.x += step;
+          break;
 
-    if ( change && this.noCollision( id, new_position ) ){
-      this.players[ id ].x = new_position.x;
-      this.players[ id ].y = new_position.y;
-      this.change();
-    }
+        case 'down':
+          new_position.y += step;
+          break;
+
+        case 'left':
+          new_position.x -= step;
+          break;
+
+        default:
+          change = false;
+      }
+
+      if ( change && this.noCollision( id, new_position ) ){
+        player.x = new_position.x;
+        player.y = new_position.y;
+      }
+    }.bind( this ));
+
+    this.change();
   },
 
 

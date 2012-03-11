@@ -7,7 +7,8 @@
     initial: {
       width: 6,
       height: 6,
-      step: 1
+      direction: null,
+      run: false
     }
   };
 })(typeof( exports ) !== 'undefined' ? exports : window );

@@ -25,10 +25,10 @@ var EventHandler = new Class({
 
       data = {
         id: this.id,
-        action: 'move',
+        action: 'change_direction',
         params: {
           direction: event.key,
-          step: event.shift ? 5 : 1
+          run:       event.shift
         }
       };
 
