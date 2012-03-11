@@ -2,7 +2,9 @@ var EventHandler = new Class({
   Implements: Events,
 
   initialize: function(){
-    this.sock = new WebSocket( 'ws://' + configuration.host + ':' + configuration.port, 'square-play' );
+    var WebSock = typeof MozWebSocket != 'undefined' ? MozWebSocket : WebSocket;
+
+    this.sock = new WebSock( 'ws://' + configuration.host + ':' + configuration.port, 'square-play' );
     window.addEvent( 'keydown', this.keyDowned.bind( this ) );
 
     this.sock.onopen = function(){
