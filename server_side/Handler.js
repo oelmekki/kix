@@ -201,5 +201,5 @@ exports.Handler = new Class({
     }
 
     return true;
-  }
+  }.protect()
 });
