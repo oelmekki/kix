@@ -5,6 +5,7 @@ var Main = new Class({
     this.events = new EventHandler();
 
     this.events.addEvent( 'change', this.drawer.update.bind( this.drawer ) );
+    this.events.addEvent( 'viewport_change', this.drawer.positionateCanvas.bind( this.drawer ) );
   }
 });
 

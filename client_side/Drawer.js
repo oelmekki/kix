@@ -5,6 +5,7 @@ var Drawer = new Class({
 
     this.$canvas.set( 'width', configuration.area_width );
     this.$canvas.set( 'height', configuration.area_height );
+    this.positionateCanvas();
   },
 
 
@@ -18,6 +19,15 @@ var Drawer = new Class({
 
 
   // Protected
+  
+
+  positionateCanvas: function(){
+    var viewport_size = window.getSize();
+    this.$canvas.setStyles({ 
+      'left': ( viewport_size.x - configuration.area_width ) / 2,
+      'top': ( viewport_size.y - configuration.area_height ) / 2
+    });
+  },
   
 
   draw: function( drawing_function, params ){

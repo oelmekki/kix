@@ -6,17 +6,11 @@ var EventHandler = new Class({
 
     this.sock = new WebSock( 'ws://' + configuration.host + ':' + configuration.port, 'square-play' );
     window.addEvent( 'keydown', this.keyDowned.bind( this ) );
+    window.addEvent( 'resize', this.windowResized.bind( this ) );
 
-    this.sock.onopen = function(){
-      console.log( 'socket open' );
-      this.sock.send( JSON.encode({ action: 'init' }) );
-    }.bind( this );
-
+    this.sock.onopen    = this.connected.bind( this );
     this.sock.onmessage = this.gotMessage.bind( this );
-
-    this.sock.onerror = function(){
-      alert( 'got error' );
-    };
+    this.sock.onerror   = this.error.bind( this );
   },
 
 
@@ -42,6 +36,12 @@ var EventHandler = new Class({
     }
   },
 
+
+  connected: function(){
+    console.log( 'socket open' );
+    this.sock.send( JSON.encode({ action: 'init' }) );
+  },
+
   
   gotMessage: function( event ){
     var data = JSON.decode( event.data );
@@ -53,5 +53,15 @@ var EventHandler = new Class({
     else {
       this.fireEvent( 'change', [ data ] );
     }
+  },
+
+
+  error: function(){
+    alert( 'got error' );
+  },
+
+
+  windowResized: function(){
+    this.fireEvent( 'viewport_change' );
   }
 });
