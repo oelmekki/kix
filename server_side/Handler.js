@@ -18,13 +18,24 @@ exports.Handler = new Class({
 
 
   addPlayer: function( id ){
-    var i, player;
+    var i, player, starting_edge;
 
     player = Object.clone( this.config.initial );
 
     for ( i = 0; i < 100; i++ ){
-      player.x = Number.random( 0, this.config.area_width - player.width );
-      player.y = Number.random( 0, this.config.area_height - player.height );
+      starting_edge = Number.random( 1, 4 );
+
+      // top or bottom
+      if ( [ 1, 2 ].indexOf( starting_edge ) !== -1 ){
+         player.x = Number.random( 0, this.config.area_width );
+         player.y = ( starting_edge == 1 ? 0 : this.config.area_height );
+      }
+
+      // left or right
+      else {
+         player.y = Number.random( 0, this.config.area_height );
+         player.x = ( starting_edge == 3 ? 0 : this.config.area_width );
+      }
 
       if ( this.noCollision( id, player ) ){
         break;
