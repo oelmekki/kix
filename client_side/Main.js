@@ -6,6 +6,16 @@ var Main = new Class({
 
     this.events.addEvent( 'change', this.drawer.update.bind( this.drawer ) );
     this.events.addEvent( 'viewport_change', this.drawer.positionateCanvas.bind( this.drawer ) );
+  },
+
+
+  pause: function(){
+    this.drawer.pause();
+  },
+
+
+  unpause: function(){
+    this.drawer.unpause();
   }
 });
 

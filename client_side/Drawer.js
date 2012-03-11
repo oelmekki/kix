@@ -5,6 +5,7 @@ var Drawer = new Class({
     this.current_radius   = 2;
     this.animation_factor = 1;
     this.players          = [];
+    this.running          = true;
 
     this.$canvas.set( 'width', configuration.area_width + ( configuration.initial.width * 2 ) );
     this.$canvas.set( 'height', configuration.area_height + ( configuration.initial.height * 2 ) );
@@ -16,12 +17,14 @@ var Drawer = new Class({
 
 
   update: function( players ){
-    this.players = players;
-    this.clear();
-    this.drawBorder();
-    Object.each( players, function( player ){
-      this.drawPlayer( player );
-    }.bind( this ));
+    if ( this.running ){
+      this.players = players;
+      this.clear();
+      this.drawBorder();
+      Object.each( players, function( player ){
+        this.drawPlayer( player );
+      }.bind( this ));
+    }
   },
   
 
@@ -31,6 +34,16 @@ var Drawer = new Class({
       'left': ( viewport_size.x - ( configuration.area_width + configuration.initial.width ) ) / 2,
       'top': ( viewport_size.y - ( configuration.area_height + configuration.initial.height ) ) / 2
     });
+  },
+
+
+  pause: function(){
+    this.running = false;
+  },
+
+
+  unpause: function(){
+    this.running = true;
   },
 
 
@@ -46,19 +59,21 @@ var Drawer = new Class({
 
 
   animate: function(){
-    this.current_radius += 1 * this.animation_factor;
+    if ( this.running ){
+      this.current_radius += 1 * this.animation_factor;
 
-    if ( this.current_radius >= 7 ){
-      this.current_radius   = 6;
-      this.animation_factor = -1;
+      if ( this.current_radius >= 7 ){
+        this.current_radius   = 6;
+        this.animation_factor = -1;
+      }
+
+      if ( this.current_radius <= 2 ){
+        this.current_radius   = 3;
+        this.animation_factor = 1;
+      }
+
+      this.update( this.players );
     }
-
-    if ( this.current_radius <= 2 ){
-      this.current_radius   = 3;
-      this.animation_factor = 1;
-    }
-
-    this.update( this.players );
   },
   
 
