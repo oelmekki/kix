@@ -1,19 +1,8 @@
 exports.Handler = new Class({ 
-  Implements: [ Options, Events ],
-
-  options: {
-    x: 30,
-    y: 30,
-    initial: {
-      width: 50,
-      height: 55,
-      step: 1
-    }
-  },
+  Implements: Events,
 
 
   initialize: function( config ){
-    this.setOptions();
     this.players  = {};
     this.config   = config;
   },
@@ -31,7 +20,7 @@ exports.Handler = new Class({
   addPlayer: function( id ){
     var i, player;
 
-    player = Object.clone( this.options.initial );
+    player = Object.clone( this.config.initial );
 
     for ( i = 0; i < 100; i++ ){
       player.x = Number.random( 0, this.config.area_width - player.width );
@@ -63,7 +52,7 @@ exports.Handler = new Class({
     var new_position, change = true;
 
     if ( ! options.step ){
-      options.step = this.options.step;
+      options.step = this.config.initial.step;
     }
 
     new_position = {

@@ -1,1 +1,2 @@
-canvas { display: block; position: absolute; }
+body { background-color: #eaeaea; }
+canvas { display: block; position: absolute; background-color: #fff; }
