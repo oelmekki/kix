@@ -6,8 +6,9 @@ var Drawer = new Class({
     this.animation_factor = 1;
     this.players          = [];
 
-    this.$canvas.set( 'width', configuration.area_width );
-    this.$canvas.set( 'height', configuration.area_height );
+    this.$canvas.set( 'width', configuration.area_width + configuration.initial.width );
+    this.$canvas.set( 'height', configuration.area_height + configuration.initial.height );
+    this.ctx.translate( configuration.initial.width / 2, configuration.initial.height / 2 );
     this.positionateCanvas();
 
     window.setInterval( this.animate.bind( this ), 125 );
@@ -16,7 +17,7 @@ var Drawer = new Class({
 
   update: function( players ){
     this.players = players;
-    this.ctx.clearRect( 0, 0, configuration.area_width, configuration.area_height );
+    this.clear();
     this.drawBorder();
     Object.each( players, function( player ){
       this.drawPlayer( player );
@@ -27,13 +28,21 @@ var Drawer = new Class({
   positionateCanvas: function(){
     var viewport_size = window.getSize();
     this.$canvas.setStyles({ 
-      'left': ( viewport_size.x - configuration.area_width ) / 2,
-      'top': ( viewport_size.y - configuration.area_height ) / 2
+      'left': ( viewport_size.x - ( configuration.area_width + configuration.initial.width ) ) / 2,
+      'top': ( viewport_size.y - ( configuration.area_height + configuration.initial.height ) ) / 2
     });
   },
 
 
   // Protected
+
+
+  clear: function(){
+    this.draw( function(){
+      this.ctx.translate( - configuration.initial.width / 2, - configuration.initial.height / 2 );
+      this.ctx.clearRect( 0, 0, configuration.area_width + configuration.initial.width, configuration.area_height + configuration.initial.height );
+    });
+  }.protect(),
 
 
   animate: function(){
@@ -64,7 +73,7 @@ var Drawer = new Class({
     this.draw( function( player ){
       this.ctx.fillStyle = player.color;
       this.ctx.beginPath();
-      this.ctx.arc( player.x + ( configuration.initial.width / 2 ), player.y + ( configuration.initial.height / 2 ), this.current_radius, 0, Math.PI * 2, true );
+      this.ctx.arc( player.x, player.y, this.current_radius, 0, Math.PI * 2, true );
       this.ctx.fill();
     }, player );
   }.protect(),
@@ -74,11 +83,9 @@ var Drawer = new Class({
     this.draw( function(){
       var decay_x, decay_y;
 
-      decay_x = configuration.initial.width / 2;
-      decay_y = configuration.initial.height / 2;
       this.ctx.strokeStyle = '#888';
       this.ctx.lineWidth = 1;
-      this.ctx.strokeRect( decay_x, decay_y, configuration.area_width - ( decay_x * 2 ), configuration.area_height - ( decay_y * 2 ) );
+      this.ctx.strokeRect( 0, 0, configuration.area_width, configuration.area_height );
     });
   }.protect()
 });

@@ -35,7 +35,7 @@ exports.Handler = new Class({
       }
     }
 
-    player.color        = 'rgba( ' + Number.random( 10, 255 )  + ', ' + Number.random( 10, 255 ) + ', ' + Number.random( 10, 255 ) + ', 0.8 )';
+    player.color        = 'rgb( ' + Number.random( 10, 255 )  + ', ' + Number.random( 10, 255 ) + ', ' + Number.random( 10, 255 ) + ' )';
     this.players[ id ]  = player;
 
     this.change();
