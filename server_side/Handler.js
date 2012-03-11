@@ -22,6 +22,7 @@ exports.Handler = new Class({
 
     player = Object.clone( this.config.initial );
 
+    // try to find a position for new player
     for ( i = 0; i < 100; i++ ){
       starting_edge = Number.random( 1, 4 );
 
@@ -38,6 +39,10 @@ exports.Handler = new Class({
       }
 
       if ( this.noCollision( id, player ) ){
+        player.color        = 'rgb( ' + Number.random( 10, 255 )  + ', ' + Number.random( 10, 255 ) + ', ' + Number.random( 10, 255 ) + ' )';
+        this.players[ id ]  = player;
+
+        this.change();
         break;
       }
 
@@ -45,11 +50,6 @@ exports.Handler = new Class({
         this.fireEvent( 'full', id );
       }
     }
-
-    player.color        = 'rgb( ' + Number.random( 10, 255 )  + ', ' + Number.random( 10, 255 ) + ', ' + Number.random( 10, 255 ) + ' )';
-    this.players[ id ]  = player;
-
-    this.change();
   },
 
 
