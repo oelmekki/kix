@@ -1,14 +1,13 @@
 exports.Board = new Class {
   Implements: Events,
 
-  initialize: ( config, run = true ) ->
+  initialize: ( run = true ) ->
     @players  = {}
-    @config   = config
-    @step     = config.step
-    @run_step = config.run_step
+    @step     = configuration.step
+    @run_step = configuration.run_step
 
     if run
-      setInterval @move.bind(@), config.base_beat
+      setInterval @move.bind(@), configuration.base_beat
 
     @
 
@@ -20,7 +19,7 @@ exports.Board = new Class {
 
 
   addPlayer: ( id ) ->
-    player = Object.clone @config.initial
+    player = Object.clone configuration.initial
 
     # try to find a position for new player
     for i in [0..99]
@@ -28,13 +27,13 @@ exports.Board = new Class {
 
       # top or bottom
       if [ 1, 2 ].indexOf( starting_edge ) isnt -1
-         player.x = Number.random 0, @config.area_width
-         player.y = starting_edge == 1 ? 0 : @config.area_height
+         player.x = Number.random 0, configuration.area_width
+         player.y = starting_edge == 1 ? 0 : configuration.area_height
 
       # left or right
       else
-         player.y = Number.random 0, @config.area_height
-         player.x = starting_edge == 3 ? 0 : @config.area_width
+         player.y = Number.random 0, configuration.area_height
+         player.x = starting_edge == 3 ? 0 : configuration.area_width
 
       if @noCollision( id, player )
         player.color        = 'rgb( ' + Number.random( 10, 255 )  + ', ' + Number.random( 10, 255 ) + ', ' + Number.random( 10, 255 ) + ' )'
@@ -128,16 +127,16 @@ exports.Board = new Class {
 
 
   isOnSafeZone: (( position ) ->
-    if position.y == 0 and position.x >= 0 and position.x <= @config.area_width
+    if position.y == 0 and position.x >= 0 and position.x <= configuration.area_width
       return true
 
-    if position.y == @config.area_height and position.x >= 0 and position.x <= @config.area_width
+    if position.y == configuration.area_height and position.x >= 0 and position.x <= configuration.area_width
       return true
 
-    if position.x == 0 and position.y >= 0 and position.y <= @config.area_height
+    if position.x == 0 and position.y >= 0 and position.y <= configuration.area_height
       return true
 
-    if position.x == @config.area_width and position.y >= 0 and position.y <= @config.area_height
+    if position.x == configuration.area_width and position.y >= 0 and position.y <= configuration.area_height
       return true
 
     return false
@@ -148,14 +147,14 @@ exports.Board = new Class {
     if new_position.x < 0
       new_position.x = 0
 
-    if new_position.x > @config.area_width
-      new_position.x = @config.area_width
+    if new_position.x > configuration.area_width
+      new_position.x = configuration.area_width
 
     if new_position.y < 0
       new_position.y = 0
 
-    if new_position.y > @config.area_height
-      new_position.y = @config.area_height
+    if new_position.y > configuration.area_height
+      new_position.y = configuration.area_height
   ).protect()
 
 

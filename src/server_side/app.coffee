@@ -1,8 +1,8 @@
 require( 'mootools' )
 
-config  = require( '../configuration' ).configuration
-server  = new ( require( './Server.js' ).Server )( config )
-board   = new ( require( './Board.js' ).Board )( config )
+global.configuration  = require( '../configuration' ).configuration
+server                = new require( './Server.js' ).Server
+board                 = new require( './Board.js' ).Board
 
 server.addEvent 'join', board.addPlayer.bind( board )
 server.addEvent 'message', board.gotMessage.bind( board )

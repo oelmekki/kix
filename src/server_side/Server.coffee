@@ -3,11 +3,10 @@ crypto = require( 'crypto' )
 exports.Server = new Class {
   Implements: Events
 
-  initialize: ( config ) ->
+  initialize: ->
     @http              = require( 'http' )
     @WebsocketServer   = require( 'websocket' ).server
     @connections       = {}
-    @config            = config
 
     @createHttpServer()
     @createWebsocketServer()
@@ -34,7 +33,7 @@ exports.Server = new Class {
 
 
   originIsAllowed: ( origin ) ->
-    origin.match new RegExp( @config.host )
+    origin.match new RegExp( configuration.host )
 
 
   reject: ( id ) ->
