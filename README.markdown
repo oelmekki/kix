@@ -18,7 +18,7 @@ npm install websocket
 Run server :
 
 ```
-node server_side/app.js
+node lib/server_side/app.js
 ```
 
 Point your browser to the index.html page (should be behind a real server, to prevent
