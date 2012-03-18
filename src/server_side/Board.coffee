@@ -1,13 +1,15 @@
-exports.Handler = new Class {
+exports.Board = new Class {
   Implements: Events,
 
-  initialize: ( config ) ->
+  initialize: ( config, run = true ) ->
     @players  = {}
     @config   = config
     @step     = config.step
     @run_step = config.run_step
 
-    setInterval( @move.bind(@), config.base_beat )
+    if run
+      setInterval @move.bind(@), config.base_beat
+
     @
 
 
