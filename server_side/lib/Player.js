@@ -19,12 +19,11 @@
       starting_edge = Number.random(1, 4);
       if ([1, 2].indexOf(starting_edge) !== -1) {
         this.x = Number.random(0, configuration.area_width);
-        this.y = starting_edge === 1 ? 0 : configuration.area_height;
+        return this.y = starting_edge === 1 ? 0 : configuration.area_height;
       } else {
         this.y = Number.random(0, configuration.area_height);
-        this.x = starting_edge === 3 ? 0 : configuration.area_width;
+        return this.x = starting_edge === 3 ? 0 : configuration.area_width;
       }
-      return console.log(this.x, this.y);
     },
     create: function() {
       this.color = 'rgb( ' + Number.random(10, 255) + ', ' + Number.random(10, 255) + ', ' + Number.random(10, 255) + ' )';

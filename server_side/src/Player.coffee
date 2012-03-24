@@ -21,8 +21,6 @@ exports.Player = new Class {
       @y = Number.random 0, configuration.area_height
       @x = if starting_edge == 3 then 0 else configuration.area_width
 
-    console.log @x, @y
-
 
   create: ->
     @color = 'rgb( ' + Number.random( 10, 255 )  + ', ' + Number.random( 10, 255 ) + ', ' + Number.random( 10, 255 ) + ' )'
