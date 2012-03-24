@@ -18,10 +18,28 @@ npm install websocket
 Run server :
 
 ```
-node lib/server_side/app.js
+node server_side/lib/app.js
 ```
 
 Point your browser to the index.html page (should be behind a real server, to prevent
 crossorigin errors).
 
 Enjoy (well, not much, right now).
+
+
+# Modifying sources
+
+watcher.js is provided as an utility to compile coffeescript and run specs as you save files.
+
+Dependencies :
+
+```
+npm install jasmine-node -g
+npm install coffeescript -g
+```
+
+Launch watcher :
+
+```
+node ./watcher.js
+```
