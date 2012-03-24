@@ -21,7 +21,7 @@ Run server :
 node server_side/lib/app.js
 ```
 
-Point your browser to the index.html page (should be behind a real server, to prevent
+Point your browser to the index.html file in client_side/ directory (should be behind a real server, to prevent
 crossorigin errors).
 
 Enjoy (well, not much, right now).
