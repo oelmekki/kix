@@ -1,0 +1,2 @@
+exports.Player = new Class {
+}
