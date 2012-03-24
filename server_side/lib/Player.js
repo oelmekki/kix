@@ -15,19 +15,16 @@
       return this;
     },
     positionateRandom: function() {
-      var starting_edge, _ref, _ref2;
+      var starting_edge;
       starting_edge = Number.random(1, 4);
       if ([1, 2].indexOf(starting_edge) !== -1) {
         this.x = Number.random(0, configuration.area_width);
-        return this.y = (_ref = starting_edge === 1) != null ? _ref : {
-          0: configuration.area_height
-        };
+        this.y = starting_edge === 1 ? 0 : configuration.area_height;
       } else {
         this.y = Number.random(0, configuration.area_height);
-        return this.x = (_ref2 = starting_edge === 3) != null ? _ref2 : {
-          0: configuration.area_width
-        };
+        this.x = starting_edge === 3 ? 0 : configuration.area_width;
       }
+      return console.log(this.x, this.y);
     },
     create: function() {
       this.color = 'rgb( ' + Number.random(10, 255) + ', ' + Number.random(10, 255) + ', ' + Number.random(10, 255) + ' )';

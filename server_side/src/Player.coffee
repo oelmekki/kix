@@ -14,12 +14,14 @@ exports.Player = new Class {
     # top or bottom
     if [ 1, 2 ].indexOf( starting_edge ) isnt -1
       @x = Number.random 0, configuration.area_width
-      @y = starting_edge == 1 ? 0 : configuration.area_height
+      @y = if starting_edge == 1 then 0 else configuration.area_height
 
     # left or right
     else
       @y = Number.random 0, configuration.area_height
-      @x = starting_edge == 3 ? 0 : configuration.area_width
+      @x = if starting_edge == 3 then 0 else configuration.area_width
+
+    console.log @x, @y
 
 
   create: ->
