@@ -1,2 +1,2 @@
 require 'mootools'
-global.configuration = require( '../../src/configuration' ).configuration
+global.configuration = require( '../../client_side/src/configuration' ).configuration
