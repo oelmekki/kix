@@ -3,11 +3,11 @@
 
   require('mootools');
 
-  global.configuration = require('../configuration').configuration;
+  global.configuration = require('../../client_side/lib/configuration').configuration;
 
-  server = new require('./Server.js').Server;
+  server = new (require('./Server.js').Server);
 
-  board = new require('./Board.js').Board;
+  board = new (require('./Board.js').Board);
 
   server.addEvent('join', board.addPlayer.bind(board));
 
