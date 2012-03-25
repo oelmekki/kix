@@ -39,7 +39,7 @@ var Watcher = {
 
       base_dir     = path.replace( /((?:server|client)_side).*/, '$1/' );
       src_dir      = base_dir + 'src/';
-      compiled_dir = base_dir + 'lib/';
+      compiled_dir = base_dir + ( base_dir.match( /server_side/ ) ? 'lib/' : 'public/' );
 
       console.log( 'compiling sources...' );
       Watcher.spawn( 'coffee', [ '-c', '-o', compiled_dir, src_dir ], function(){
