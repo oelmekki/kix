@@ -2,8 +2,15 @@
   var __hasProp = Object.prototype.hasOwnProperty;
 
   exports.Player = new Class({
-    initialize: function() {
+    Extends: require('./Base').Base,
+    options: {
+      dependencies: {
+        DrawQueue: require('./DrawQueue').DrawQueue
+      }
+    },
+    initialize: function(options) {
       var attr, value, _ref;
+      this.parent(options);
       this.step = configuration.step;
       this.run_step = configuration.run_step;
       _ref = configuration.initial;
@@ -27,7 +34,7 @@
     },
     create: function() {
       this.color = 'rgb( ' + Number.random(10, 255) + ', ' + Number.random(10, 255) + ', ' + Number.random(10, 255) + ' )';
-      return this.drawn = [];
+      return this.draw_queue = new this.DrawQueue();
     },
     findNewPosition: function() {
       var new_position, step;
@@ -58,9 +65,12 @@
       if (this.isOnSafeZone(new_position)) {
         this.x = new_position.x;
         this.y = new_position.y;
-        if (this.drawing) return this.drawn = [];
+        if (this.drawing) {
+          this.draw_queue.reset();
+          return this.drawing = false;
+        }
       } else if (this.drawing) {
-        this.drawn.push({
+        this.draw_queue.addPosition({
           x: new_position.x,
           y: new_position.y
         });
@@ -74,6 +84,16 @@
         this.run = !!options.run;
         if (options.draw) return this.drawing = true;
       }
+    },
+    toJson: function() {
+      var resp;
+      return resp = {
+        x: this.x,
+        y: this.y,
+        width: this.width,
+        height: this.height,
+        drawn: this.draw_queue.queue
+      };
     },
     isOnSafeZone: (function(position) {
       if (position.y === 0 && position.x >= 0 && position.x <= configuration.area_width) {

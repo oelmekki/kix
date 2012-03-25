@@ -1,8 +1,15 @@
-Player = require( '../src/Player' ).Player
+Player    = require( '../src/Player' ).Player
+DrawQueue = require( '../src/DrawQueue' ).DrawQueue
 
 describe 'Player', ->
   beforeEach ->
-    @player = new Player()
+    @DrawQueue = getMock 'DrawQueue', {
+      initialize:  true
+      addPosition: true
+      reset:       true
+    }
+
+    @player = new Player( dependencies: { DrawQueue: @DrawQueue } )
 
   describe 'positionateRandom()', ->
     beforeEach ->
@@ -23,7 +30,7 @@ describe 'Player', ->
       expect( @player.color ).toMatch( /rgb\( \d+, \d+, \d+ \)/ )
 
     it "should create draw queue", ->
-      expect( @player.drawn ).toEqual( [] )
+      expect( @DrawQueue.prototype.initialize.used ).toEqual( 1 )
 
 
   describe 'findNewPosition()', ->
@@ -41,6 +48,9 @@ describe 'Player', ->
 
 
   describe 'move()', ->
+    beforeEach ->
+      @player.draw_queue = new @DrawQueue()
+
     describe 'moving along the edges', ->
       describe 'when not drawing', ->
         beforeEach ->
@@ -58,7 +68,6 @@ describe 'Player', ->
           @player.x       = 0
           @player.y       = 1
           @player.drawing = true
-          @player.drawn   = [ { x: 0, y: 4 }, { x: 0, y: 3 }, { x: 0, y: 2 } ]
           @player.move x: 0, y: 0
 
         it 'should move player', ->
@@ -66,7 +75,7 @@ describe 'Player', ->
           expect( @player.y ).toBe( 0 )
           
         it 'should reset draw queue', ->
-          expect( @player.drawn ).toEqual( [] )
+          expect( @player.draw_queue.reset.used ).toBe( 1 )
 
 
     describe 'moving somewhere else than edges', ->
@@ -86,7 +95,6 @@ describe 'Player', ->
           @player.x       = 0
           @player.y       = 1
           @player.drawing = true
-          @player.drawn   = []
           @player.move x: 1, y: 1
 
         it 'should move player', ->
@@ -94,8 +102,7 @@ describe 'Player', ->
           expect( @player.y ).toBe( 1 )
 
         it 'should add new position to draw queue', ->
-          expect( @player.drawn[0].x ).toBe( 1 )
-          expect( @player.drawn[0].y ).toBe( 1 )
+          expect( @player.draw_queue.addPosition.used ).toBe( 1 )
 
 
   describe 'changeDirection()', ->

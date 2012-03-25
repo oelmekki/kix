@@ -1,7 +1,15 @@
 exports.Player = new Class {
-  initialize: ->
-    @step     = configuration.step
-    @run_step = configuration.run_step
+  Extends: require( './Base' ).Base
+
+  options:
+    dependencies:
+      DrawQueue: require( './DrawQueue' ).DrawQueue
+
+  initialize: ( options ) ->
+    @parent( options )
+
+    @step       = configuration.step
+    @run_step   = configuration.run_step
 
     for own attr, value of configuration.initial
       @[ attr ] = value
@@ -23,8 +31,8 @@ exports.Player = new Class {
 
 
   create: ->
-    @color = 'rgb( ' + Number.random( 10, 255 )  + ', ' + Number.random( 10, 255 ) + ', ' + Number.random( 10, 255 ) + ' )'
-    @drawn = []
+    @color      = 'rgb( ' + Number.random( 10, 255 )  + ', ' + Number.random( 10, 255 ) + ', ' + Number.random( 10, 255 ) + ' )'
+    @draw_queue = new @DrawQueue()
     
 
   findNewPosition: ->
@@ -58,10 +66,12 @@ exports.Player = new Class {
     if @isOnSafeZone new_position
       @x = new_position.x
       @y = new_position.y
-      @drawn = [] if @drawing
+      if @drawing
+        @draw_queue.reset()
+        @drawing = false
 
     else if @drawing
-      @drawn.push({ x: new_position.x, y: new_position.y })
+      @draw_queue.addPosition( x: new_position.x, y: new_position.y )
       @x = new_position.x
       @y = new_position.y
 
@@ -71,6 +81,15 @@ exports.Player = new Class {
       @direction  = options.direction
       @run        = !! options.run
       @drawing    = true if options.draw
+
+
+  toJson: ->
+    resp =
+      x:      @x
+      y:      @y
+      width:  @width
+      height: @height
+      drawn:  @draw_queue.queue
 
 
   # Protected

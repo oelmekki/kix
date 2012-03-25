@@ -56,7 +56,7 @@ exports.Board = new Class {
 
 
   change: ( ->
-    @fireEvent 'change', [ Object.values( @players ) ]
+    @fireEvent 'change', [ Object.values( @players ).map( ( player )-> ( player.toJson() ) ) ]
   ).protect()
 
 

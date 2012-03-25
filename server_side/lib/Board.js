@@ -56,7 +56,11 @@
       return this.change();
     },
     change: (function() {
-      return this.fireEvent('change', [Object.values(this.players)]);
+      return this.fireEvent('change', [
+        Object.values(this.players).map(function(player) {
+          return player.toJson();
+        })
+      ]);
     }).protect(),
     noCollision: (function(current_id, current_player) {
       var collide,

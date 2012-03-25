@@ -8,6 +8,7 @@ describe 'Board', ->
       create:             true
       findNewPosition:    true
       move:               true
+      toJson:             true
     }
 
     @board = new Board( dependencies: { Player: @Player })
