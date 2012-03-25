@@ -3,7 +3,7 @@
 
   require('mootools');
 
-  global.configuration = require('../../client_side/lib/configuration').configuration;
+  global.configuration = require('../../client_side/public/configuration').configuration;
 
   server = new (require('./Server.js').Server);
 
