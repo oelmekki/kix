@@ -10,3 +10,4 @@ server.addEvent 'quit', board.removePlayer.bind( board )
 board.addEvent 'change', server.sendJson.bind( server )
 board.addEvent 'full', server.reject.bind( server )
 
+board.run()

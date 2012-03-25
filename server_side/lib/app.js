@@ -19,4 +19,6 @@
 
   board.addEvent('full', server.reject.bind(server));
 
+  board.run();
+
 }).call(this);

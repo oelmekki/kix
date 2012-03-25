@@ -1,15 +1,19 @@
 (function() {
-  var Player;
-
-  Player = require('./Player').Player;
 
   exports.Board = new Class({
-    Implements: Events,
-    initialize: function(run) {
-      if (run == null) run = true;
+    Extends: require('./Base').Base,
+    options: {
+      dependencies: {
+        Player: require('./Player').Player
+      }
+    },
+    initialize: function(options) {
+      this.parent(options);
       this.players = {};
-      if (run) setInterval(this.move.bind(this), configuration.base_beat);
       return this;
+    },
+    run: function() {
+      return setInterval(this.move.bind(this), configuration.base_beat);
     },
     gotMessage: function(message) {
       switch (message.action) {
@@ -21,7 +25,7 @@
     },
     addPlayer: function(id) {
       var i, player, _results;
-      player = new Player();
+      player = new this.Player();
       _results = [];
       for (i = 0; i <= 99; i++) {
         player.positionateRandom();

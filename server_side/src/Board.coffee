@@ -1,15 +1,17 @@
-Player = require( './Player' ).Player
-
 exports.Board = new Class {
-  Implements: Events,
+  Extends: require( './Base' ).Base
 
-  initialize: ( run = true ) ->
-    @players  = {}
+  options:
+    dependencies:
+      Player: require( './Player' ).Player
 
-    if run
-      setInterval @move.bind(@), configuration.base_beat
-
+  initialize: ( options ) ->
+    @parent( options )
+    @players = {}
     @
+
+  run: ->
+    setInterval @move.bind(@), configuration.base_beat
 
 
   gotMessage: ( message ) ->
@@ -19,7 +21,7 @@ exports.Board = new Class {
 
 
   addPlayer: ( id ) ->
-    player = new Player()
+    player = new @Player()
 
     # try to find a position for new player
     for i in [0..99]
