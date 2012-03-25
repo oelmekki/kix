@@ -24,7 +24,7 @@ exports.Player = new Class {
 
   create: ->
     @color = 'rgb( ' + Number.random( 10, 255 )  + ', ' + Number.random( 10, 255 ) + ', ' + Number.random( 10, 255 ) + ' )'
-    @drawn = [ { x: @x, y: @y } ]
+    @drawn = []
     
 
   findNewPosition: ->
@@ -58,6 +58,7 @@ exports.Player = new Class {
     if @isOnSafeZone new_position
       @x = new_position.x
       @y = new_position.y
+      @drawn = [] if @drawing
 
     else if @drawing
       @drawn.push({ x: new_position.x, y: new_position.y })
@@ -67,13 +68,9 @@ exports.Player = new Class {
 
   changeDirection: ( options ) ->
     if  [ 'up', 'right', 'down', 'left' ].indexOf( options.direction ) != -1
-      @direction = options.direction
-      @run       = !! options.run
-      
-      if options.draw
-        if ! @draw and @isOnSafeZone( @ )
-          @drawn   = []
-          @drawing = true
+      @direction  = options.direction
+      @run        = !! options.run
+      @drawing    = true if options.draw
 
 
   # Protected

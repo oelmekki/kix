@@ -27,12 +27,7 @@
     },
     create: function() {
       this.color = 'rgb( ' + Number.random(10, 255) + ', ' + Number.random(10, 255) + ', ' + Number.random(10, 255) + ' )';
-      return this.drawn = [
-        {
-          x: this.x,
-          y: this.y
-        }
-      ];
+      return this.drawn = [];
     },
     findNewPosition: function() {
       var new_position, step;
@@ -62,7 +57,8 @@
       this.fixPosition(new_position);
       if (this.isOnSafeZone(new_position)) {
         this.x = new_position.x;
-        return this.y = new_position.y;
+        this.y = new_position.y;
+        if (this.drawing) return this.drawn = [];
       } else if (this.drawing) {
         this.drawn.push({
           x: new_position.x,
@@ -76,12 +72,7 @@
       if (['up', 'right', 'down', 'left'].indexOf(options.direction) !== -1) {
         this.direction = options.direction;
         this.run = !!options.run;
-        if (options.draw) {
-          if (!this.draw && this.isOnSafeZone(this)) {
-            this.drawn = [];
-            return this.drawing = true;
-          }
-        }
+        if (options.draw) return this.drawing = true;
       }
     },
     isOnSafeZone: (function(position) {
