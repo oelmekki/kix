@@ -70,6 +70,12 @@
           return this.drawing = false;
         }
       } else if (this.drawing) {
+        if (this.draw_queue.is_empty()) {
+          this.draw_queue.addPosition({
+            x: this.x,
+            y: this.y
+          });
+        }
         this.draw_queue.addPosition({
           x: new_position.x,
           y: new_position.y

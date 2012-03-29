@@ -7,6 +7,7 @@ describe 'Player', ->
       initialize:  true
       addPosition: true
       reset:       true
+      is_empty:    false
     }
 
     @player = new Player( dependencies: { DrawQueue: @DrawQueue } )

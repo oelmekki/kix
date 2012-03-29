@@ -71,6 +71,7 @@ exports.Player = new Class {
         @drawing = false
 
     else if @drawing
+      @draw_queue.addPosition( x: @x, y: @y ) if @draw_queue.is_empty()
       @draw_queue.addPosition( x: new_position.x, y: new_position.y )
       @x = new_position.x
       @y = new_position.y

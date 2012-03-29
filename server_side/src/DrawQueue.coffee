@@ -13,6 +13,10 @@ exports.DrawQueue = new Class {
     @queue = []
 
 
+  is_empty: ->
+    @queue.length == 0
+
+
   # Protected
 
 
